@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2D Pro - SET Index</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:#121212;color:#fff;padding:16px;padding-bottom:40px}
+header{text-align:center;padding:12px 0;margin-bottom:16px;border-bottom:1px solid #222}
+header h1{color:#FFD700;font-size:16px}
+.section-card{background:#1E1E1E;border-radius:16px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,215,0,0.2)}
+.section-title{color:#888;font-size:12px;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between}
+.live-badge{background:#2e7d32;color:#fff;font-size:10px;padding:3px 8px;border-radius:6px}
+.collect-badge{background:#f57f17;color:#fff;font-size:10px;padding:3px 8px;border-radius:6px}
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin-bottom:14px}
+.tech-item{background:#21262d;padding:8px;border-radius:8px}
+.tech-lbl{font-size:9px;color:#8b949e;margin-bottom:4px}
+.tech-val{font-size:12px;color:#58a6ff;font-weight:bold}
+.session-container{display:grid;grid-template-columns:1fr;gap:14px}
+.session-card{background:#252525;border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.08)}
+.session-header{display:flex;justify-content:space-between;color:#FFD700;font-size:13px;font-weight:bold;margin-bottom:10px;border-bottom:1px solid #333;padding-bottom:6px}
+.session-live-box{background:#1a1a1a;border-radius:8px;padding:10px;margin-bottom:10px;border:1px dashed #444}
+.session-live-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center;margin-bottom:6px}
+.sub-market-val{color:#FFD700;font-size:14px;font-weight:bold}
+.sub-market-lbl{color:#888;font-size:9px;margin-bottom:2px}
+.session-info-text{font-size:10px;color:#aaa;text-align:center;margin-top:4px}
+.prediction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.prediction-badge{background:#333;color:#666;font-size:18px;font-weight:bold;padding:12px 0;text-align:center;border-radius:8px}
+.prediction-badge.tier-1{background:#FFD700;color:#000;box-shadow:0 2px 8px rgba(255,215,0,0.4)}
+.prediction-sub{text-align:center;color:#f57f17;font-size:10px;margin-top:4px}
+.result-input-box{margin-top:10px;display:flex;gap:8px;align-items:center;background:#1a1a1a;padding:8px;border-radius:8px}
+.result-input-box label{font-size:11px;color:#aaa;flex:1}
+.result-input-box input{background:#121212;color:#FFD700;border:1px solid #444;padding:4px 8px;width:50px;text-align:center;border-radius:6px;font-weight:bold}
+.status-tag{font-size:10px;padding:4px 6px;border-radius:4px;font-weight:bold}
+.matched{background:#2e7d32;color:#fff}
+.unmatched{background:#c62828;color:#fff}
+.pending{background:#f57f17;color:#fff}
+.history-box{margin-top:10px;background:#161b22;border:1px solid #30363d;border-radius:10px;padding:10px;max-height:180px;overflow-y:auto}
+.history-item{font-size:10px;color:#8b949e;display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #21262d}
+.history-item span{color:#58a6ff}
+.clear-btn{background:#c62828;color:#fff;border:none;padding:4px 8px;border-radius:4px;font-size:10px;cursor:pointer}
+.learning-box{background:#1a251a;border:1px solid #2e7d32;padding:10px;border-radius:10px;font-size:11px;color:#a5d6a7;margin-top:10px}
+</style>
+</head>
+<body>
+<header><h1>2D PRO - SET INDEX</h1></header>
+<div class="section-card">
+<div class="section-title"><span>LIVE SET INDEX</span><span style="color:#3fb950;font-size:10px" id="liveStatus">CONNECTING...</span></div>
+<div class="tech-grid">
+<div class="tech-item"><div class="tech-lbl">SET Price</div><div class="tech-val" id="setPrice">--</div></div>
+<div class="tech-item"><div class="tech-lbl">Last Digit</div><div class="tech-val" id="lastDigit">--</div></div>
+<div class="tech-item"><div class="tech-lbl">Trend</div><div class="tech-val" id="trend">--</div></div>
+<div class="tech-item"><div class="tech-lbl">Data</div><div class="tech-val" id="dataCount">0</div></div>
+</div>
+</div>
+<div class="section-card">
+<div class="section-title"><span>SESSIONS</span><span style="color:#FFD700;font-size:11px" id="currentTime">--:--:--</span></div>
+<div class="session-container">
+<div class="session-card">
+<div class="session-header"><span>🌅 MORNING — Target: 12:01</span><span class="collect-badge" id="m_badge">စောင့်ဆိုင်းဆဲ</span></div>
+<div class="session-live-box">
+<div class="session-live-grid">
+<div><div class="sub-market-lbl">SET Price</div><div class="sub-market-val" id="m_price">--</div></div>
+<div><div class="sub-market-lbl">Last Digit</div><div class="sub-market-val" id="m_digit">--</div></div>
+</div>
+<div class="session-info-text" id="m_info">09:30 - 12:01 | Data စုနေသည်</div>
+</div>
+<div class="prediction-grid" id="m_preds">
+<div class="prediction-badge tier-1">--</div>
+<div class="prediction-badge tier-1">--</div>
+<div class="prediction-badge tier-1">--</div>
+</div>
+<div class="prediction-sub" id="m_sub">⏳ 11:30 တွင် 3 ဂဏန်း ထုတ်ပေးမည်</div>
+<div class="result-input-box">
+<label>12:01 Last Digit:</label>
+<input type="text" maxlength="1" id="m_actual" placeholder="5">
+<span id="m_tag" class="status-tag pending">စောင့်</span>
+</div>
+</div>
+<div class="session-card">
+<div class="session-header"><span>🌆 EVENING — Target: 16:30</span><span class="collect-badge" id="e_badge">စောင့်ဆိုင်းဆဲ</span></div>
+<div class="session-live-box">
+<div class="session-live-grid">
+<div><div class="sub-market-lbl">SET Price</div><div class="sub-market-val" id="e_price">--</div></div>
+<div><div class="sub-market-lbl">Last Digit</div><div class="sub-market-val" id="e_digit">--</div></div>
+</div>
+<div class="session-info-text" id="e_info">13:30 - 16:30 | Data စုနေသည်</div>
+</div>
+<div class="prediction-grid" id="e_preds">
+<div class="prediction-badge tier-1">--</div>
+<div class="prediction-badge tier-1">--</div>
+<div class="prediction-badge tier-1">--</div>
+</div>
+<div class="prediction-sub" id="e_sub">⏳ 15:35 တွင် 3 ဂဏန်း ထုတ်ပေးမည်</div>
+<div class="result-input-box">
+<label>16:30 Last Digit:</label>
+<input type="text" maxlength="1" id="e_actual" placeholder="5">
+<span id="e_tag" class="status-tag pending">စောင့်</span>
+</div>
+</div>
+</div>
+</div>
+<div class="section-card">
+<div class="section-title"><span>HISTORY</span><button class="clear-btn" onclick="clearAll()">Clear</button></div>
+<div class="history-box" id="historyLogContainer" style="margin-top:10px">
+<div style="text-align:center;color:#888;font-size:10px;padding:10px">မှတ်တမ်းမရှိသေး</div>
+</div>
+</div>
+<div class="learning-box" id="learningStatusBox">💡 SET Index စတင်နေသည်...</div>
+<script>
+let currentPrice=null,priceHistory=[],mPreds=[],ePreds=[],lastPriceTime=0,mLocked=false,eLocked=false;
+
+async function fetchPrice(){
+  const symbol = "^SET.BK";
+  const proxy = "https://api.allorigins.win/raw?url=";
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1m&range=1d`;
+  
+  try{
+    const response = await fetch(proxy + encodeURIComponent(url));
+    const data = await response.json();
+    
+    if(!data || !data.chart || !data.chart.result || !data.chart.result[0]){
+      throw new Error("No data");
+    }
+    
+    const prices = data.chart.result[0].indicators.quote[0].close;
+    if(!prices || prices.length === 0){
+      throw new Error("No prices");
+    }
+    
+    const lastPrice = prices[prices.length - 1];
+    
+    if(lastPrice && lastPrice !== currentPrice){
+      currentPrice = lastPrice;
+      updateUI(lastPrice);
+      recordData(lastPrice);
+    }
+  }catch(e){
+    console.error("Error:", e);
+    document.getElementById('liveStatus').innerText = 'ERROR';
+    document.getElementById('liveStatus').style.color = '#f85149';
+  }
+}
+
+setInterval(fetchPrice, 60000);
+fetchPrice();
+
+function updateUI(price){
+  document.getElementById('setPrice').innerText = price.toFixed(2);
+  document.getElementById('liveStatus').innerText = '🔴 LIVE';
+  document.getElementById('liveStatus').style.color = '#3fb950';
+  const lastDigit = getLastDigit(price);
+  document.getElementById('lastDigit').innerText = lastDigit;
+  document.getElementById('m_price').innerText = price.toFixed(2);
+  document.getElementById('m_digit').innerText = lastDigit;
+  document.getElementById('e_price').innerText = price.toFixed(2);
+  document.getElementById('e_digit').innerText = lastDigit;
+  
+  const now = new Date();
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const total = hour * 60 + minute;
+  
+  if(total >= 570 && total <= 721){
+    if(priceHistory.length >= 20 && !mLocked){
+      const trend = analyzeTrend();
+      document.getElementById('trend').innerText = trend;
+      const preds = generate3Guesses(lastDigit, trend);
+      mPreds = preds;
+      renderGrid('m_preds', preds);
+      document.getElementById('m_sub').innerText = `Last: ${lastDigit} | ${preds.join(', ')} | Hot: ${getHotNumbers(3).join(',')}`;
+      document.getElementById('m_badge').innerText = 'LOCKED';
+      document.getElementById('m_badge').className = 'live-badge';
+      mLocked = true;
+    }else{
+      document.getElementById('m_info').innerText = `Data စုနေသည်... ${priceHistory.length}/20`;
+    }
+  }
+  
+  if(total >= 810 && total <= 990){
+    if(priceHistory.length >= 20 && !eLocked){
+      const trend = analyzeTrend();
+      document.getElementById('trend').innerText = trend;
+      const preds = generate3Guesses(lastDigit, trend);
+      ePreds = preds;
+      renderGrid('e_preds', preds);
+      document.getElementById('e_sub').innerText = `Last: ${lastDigit} | ${preds.join(', ')} | Hot: ${getHotNumbers(3).join(',')}`;
+      document.getElementById('e_badge').innerText = 'LOCKED';
+      document.getElementById('e_badge').className = 'live-badge';
+      eLocked = true;
+    }else{
+      document.getElementById('e_info').innerText = `Data စုနေသည်... ${priceHistory.length}/20`;
+    }
+  }
+  
+  document.getElementById('learningStatusBox').innerHTML = `💡 LIVE: ${price.toFixed(2)} | Last: ${lastDigit} | Data: ${priceHistory.length} | Hot: ${getHotNumbers(3).join(',')}`;
+}
+
+function getLastDigit(price){
+  const decimal = price.toFixed(2).split('.')[1];
+  return parseInt(decimal.charAt(decimal.length - 1));
+}
+
+function recordData(price){
+  const now = new Date();
+  if(now.getTime() - lastPriceTime < 60000) return;
+  lastPriceTime = now.getTime();
+  priceHistory.push({price, time: now.toISOString()});
+  if(priceHistory.length > 100) priceHistory.shift();
+  document.getElementById('dataCount').innerText = priceHistory.length;
+}
+
+function analyzeTrend(){
+  if(priceHistory.length < 20) return "UNKNOWN";
+  const prices = priceHistory.slice(-20).map(p => p.price);
+  const recent = prices.slice(-10), earlier = prices.slice(-20, -10);
+  const ra = recent.reduce((a,b) => a+b, 0) / recent.length;
+  const ea = earlier.reduce((a,b) => a+b, 0) / earlier.length;
+  if(!ea) return "UNKNOWN";
+  const ch = ((ra - ea) / ea) * 100;
+  if(ch >= 0.15) return "STRONG_UP";
+  if(ch > 0) return "UP";
+  if(ch <= -0.15) return "STRONG_DOWN";
+  if(ch < 0) return "DOWN";
+  return "FLAT";
+}
+
+function getHotNumbers(n){
+  const lastDigits = priceHistory.map(p => getLastDigit(p.price));
+  const freq = {};
+  for(let i = 0; i <= 9; i++) freq[i] = 0;
+  lastDigits.forEach(d => {if(d >= 0 && d <= 9) freq[d]++});
+  return Object.keys(freq).map(Number).sort((a,b) => freq[b] - freq[a]).slice(0, n);
+}
+
+function getStreak(){
+  const lastDigits = priceHistory.map(p => getLastDigit(p.price));
+  if(lastDigits.length < 2) return 1;
+  let streak = 1;
+  for(let i = lastDigits.length - 2; i >= 0; i--){
+    if(lastDigits[i] === lastDigits[lastDigits.length - 1]){
+      streak++;
+    }else{
+      break;
+    }
+  }
+  return streak;
+}
+
+function getPattern(){
+  const lastDigits = priceHistory.map(p => getLastDigit(p.price));
+  if(lastDigits.length < 5) return null;
+  const last5 = lastDigits.slice(-5);
+  if(last5[0] === last5[2] && last5[2] === last5[4]){
+    return last5[1];
+  }
+  if(last5[0] === last5[1] && last5[2] === last5[3]){
+    return last5[4];
+  }
+  return null;
+}
+
+function generate3Guesses(lastDigit, trend){
+  const guesses = [];
+  const used = new Set();
+  
+  function add(d){
+    const n = ((d % 10) + 10) % 10;
+    if(!used.has(n) && guesses.length < 3){
+      used.add(n);
+      guesses.push(n);
+    }
+  }
+  
+  const streak = getStreak();
+  if(streak >= 3){
+    add(lastDigit);
+    add(lastDigit);
+    add(lastDigit);
+    return guesses;
+  }
+  
+  const pattern = getPattern();
+  if(pattern !== null){
+    add(pattern);
+  }
+  
+  add(lastDigit);
+  const hot = getHotNumbers(3);
+  hot.forEach(h => add(h));
+  
+  if(trend === "STRONG_UP"){
+    add(lastDigit + 1);
+    add(lastDigit + 2);
+  }else if(trend === "UP"){
+    add(lastDigit + 1);
+    add(lastDigit - 1);
+  }else if(trend === "STRONG_DOWN"){
+    add(lastDigit - 1);
+    add(lastDigit - 2);
+  }else if(trend === "DOWN"){
+    add(lastDigit - 1);
+    add(lastDigit + 1);
+  }else{
+    add(lastDigit - 1);
+    add(lastDigit + 1);
+  }
+  
+  while(guesses.length < 3){
+    for(let i = 0; i <= 9; i++){
+      if(!used.has(i)){
+        guesses.push(i);
+        used.add(i);
+        if(guesses.length >= 3) break;
+      }
+    }
+  }
+  
+  return guesses;
+}
+
+function renderGrid(id, preds){
+  const grid = document.getElementById(id);
+  grid.innerHTML = preds.map(p => `<div class="prediction-badge tier-1">${p}</div>`).join('');
+}
+
+setInterval(() => {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('currentTime').innerText = `${h}:${m}:${s}`;
+  
+  const total = now.getHours() * 60 + now.getMinutes();
+  
+  if(total >= 690 && total < 695 && !mLocked && priceHistory.length >= 20){
+    const trend = analyzeTrend();
+    const lastDigit = getLastDigit(currentPrice);
+    const preds = generate3Guesses(lastDigit, trend);
+    mPreds = preds;
+    renderGrid('m_preds', preds);
+    document.getElementById('m_sub').innerText = `Last: ${lastDigit} | ${preds.join(', ')} | Hot: ${getHotNumbers(3).join(',')}`;
+    document.getElementById('m_badge').innerText = 'LOCKED';
+    document.getElementById('m_badge').className = 'live-badge';
+    mLocked = true;
+  }
+  
+  if(total >= 935 && total < 940 && !eLocked && priceHistory.length >= 20){
+    const trend = analyzeTrend();
+    const lastDigit = getLastDigit(currentPrice);
+    const preds = generate3Guesses(lastDigit, trend);
+    ePreds = preds;
+    renderGrid('e_preds', preds);
+    document.getElementById('e_sub').innerText = `Last: ${lastDigit} | ${preds.join(', ')} | Hot: ${getHotNumbers(3).join(',')}`;
+    document.getElementById('e_badge').innerText = 'LOCKED';
+    document.getElementById('e_badge').className = 'live-badge';
+    eLocked = true;
+  }
+}, 1000);
+
+document.getElementById('m_actual').addEventListener('input', function(){
+  const val = this.value.trim();
+  const tag = document.getElementById('m_tag');
+  if(!/^d$/.test(val)){
+    tag.innerText = 'စောင့်';
+    tag.className = 'pending';
+    return;
+  }
+  if(!mPreds.length){
+    tag.innerText = 'မထွက်သေး';
+    tag.className = 'pending';
+    return;
+  }
+  const digit = parseInt(val);
+  const ok = mPreds.includes(digit);
+  tag.innerText = ok ? 'MATCH' : 'MISS';
+  tag.className = ok ? 'matched' : 'unmatched';
+  saveResult('မနက် 12:01', val, ok);
+  updateStats(ok);
+});
+
+document.getElementById('e_actual').addEventListener('input', function(){
+  const val = this.value.trim();
+  const tag = document.getElementById('e_tag');
+  if(!/^d$/.test(val)){
+    tag.innerText = 'စောင့်';
+    tag.className = 'pending';
+    return;
+  }
+  if(!ePreds.length){
+    tag.innerText = 'မထွက်သေး';
+    tag.className = 'pending';
+    return;
+  }
+  const digit = parseInt(val);
+  const ok = ePreds.includes(digit);
+  tag.innerText = ok ? 'MATCH' : 'MISS';
+  tag.className = ok ? 'matched' : 'unmatched';
+  saveResult('ညနေ 16:30', val, ok);
+  updateStats(ok);
+});
+
+function saveResult(sess, val, ok){
+  const logs = JSON.parse(localStorage.getItem('2d_logs') || '[]');
+  logs.unshift({time: new Date().toLocaleString(), session: sess, value: val, status: ok ? 'MATCH' : 'MISS'});
+  localStorage.setItem('2d_logs', JSON.stringify(logs.slice(0, 100)));
+  renderHistoryLogs();
+}
+
+function updateStats(ok){
+  const stats = JSON.parse(localStorage.getItem('2d_stats') || '{"total":0,"wins":0}');
+  stats.total++;
+  if(ok) stats.wins++;
+  localStorage.setItem('2d_stats', JSON.stringify(stats));
+  const acc = stats.total === 0 ? '0.0' : ((stats.wins / stats.total) * 100).toFixed(1);
+  document.getElementById('learningStatusBox').innerHTML = `💡 LIVE | Total: ${stats.total} | Match: ${stats.wins} | Accuracy: ${acc}%`;
+}
+
+function renderHistoryLogs(){
+  const logs = JSON.parse(localStorage.getItem('2d_logs') || '[]'), c = document.getElementById('historyLogContainer');
+  if(!logs.length){
+    c.innerHTML = '<div style="text-align:center;color:#888;font-size:10px;padding:10px">မှတ်တမ်းမရှိသေး</div>';
+    return;
+  }
+  c.innerHTML = logs.map(log => `<div class="history-item"><div>[${log.time}] ${log.session} <span>${log.value}</span></div><div style="color:${log.status === 'MATCH' ? '#3fb950' : '#f85149'}">${log.status}</div></div>`).join('');
+}
+
+function clearAll(){
+  localStorage.removeItem('2d_logs');
+  localStorage.removeItem('2d_stats');
+  priceHistory = [];
+  mPreds = [];
+  ePreds = [];
+  mLocked = false;
+  eLocked = false;
+  document.getElementById('setPrice').innerText = '--';
+  document.getElementById('lastDigit').innerText = '--';
+  document.getElementById('trend').innerText = '--';
+  document.getElementById('dataCount').innerText = '0';
+  document.getElementById('m_price').innerText = '--';
+  document.getElementById('m_digit').innerText = '--';
+  document.getElementById('e_price').innerText = '--';
+  document.getElementById('e_digit').innerText = '--';
+  document.getElementById('m_sub').innerText = '⏳ 11:30 တွင် 3 ဂဏန်း ထုတ်ပေးမည်';
+  document.getElementById('e_sub').innerText = '⏳ 15:35 တွင် 3 ဂဏန်း ထုတ်ပေးမည်';
+  document.getElementById('m_badge').innerText = 'စောင့်ဆိုင်းဆဲ';
+  document.getElementById('e_badge').innerText = 'စောင့်ဆိုင်းဆဲ';
+  document.getElementById('m_badge').className = 'collect-badge';
+  document.getElementById('e_badge').className = 'collect-badge';
+  renderHistoryLogs();
+  document.getElementById('learningStatusBox').innerHTML = '💡 SET Index စတင်နေသည်...';
+}
+
+renderHistoryLogs();
+</script>
+</body>
+</html>
