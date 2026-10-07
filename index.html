@@ -362,7 +362,7 @@ setInterval(() => {
 document.getElementById('m_actual').addEventListener('input', function(){
   const val = this.value.trim();
   const tag = document.getElementById('m_tag');
-  if(!/^d$/.test(val)){
+  if(!/^\d$/.test(val)){
     tag.innerText = 'စောင့်';
     tag.className = 'pending';
     return;
@@ -383,7 +383,7 @@ document.getElementById('m_actual').addEventListener('input', function(){
 document.getElementById('e_actual').addEventListener('input', function(){
   const val = this.value.trim();
   const tag = document.getElementById('e_tag');
-  if(!/^d$/.test(val)){
+  if(!/^\d$/.test(val)){
     tag.innerText = 'စောင့်';
     tag.className = 'pending';
     return;
